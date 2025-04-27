@@ -118,9 +118,15 @@ frontend-react-crud-main/
 └── vite.config.js # Arquivo de configuração do Vite
 *(A estrutura exata pode variar ligeiramente)*
 
-## 🔒 Considerações de Segurança
+## 📜 Scripts Disponíveis
 
-*   **Chave de Serviço (`serviceAccountKey.json`):** Trate este arquivo como confidencial. Ele concede acesso administrativo ao seu projeto Firebase. **Nunca** o envie para repositórios públicos ou o compartilhe. Certifique-se de que está listado no `.gitignore`.
-*   **Regras do Firestore:** As regras de segurança do Firestore definidas no console determinam quem pode ler ou escrever dados. Para produção, configure regras restritivas em vez de usar o modo de teste.
-*   **Validação de Entrada:** Sempre valide e sanitize os dados recebidos nas requisições para prevenir vulnerabilidades.
-*   **Hashing de Senhas:** Este projeto usa `bcrypt` para armazenar senhas de forma segura. Nunca armazene senhas em texto plano.
+No diretório do projeto, você pode executar os seguintes comandos:
+
+-   `npm run dev` ou `yarn dev`:
+    Inicia o servidor de desenvolvimento com hot-reload.
+-   `npm run build` ou `yarn build`:
+    Gera a versão de produção otimizada do projeto na pasta `dist/`.
+-   `npm run preview` ou `yarn preview`:
+    Inicia um servidor local para visualizar a versão de produção gerada.
+-   `npm run lint` ou `yarn lint`:
+    Executa o ESLint para verificar e corrigir problemas de estilo e potenciais erros no código.
