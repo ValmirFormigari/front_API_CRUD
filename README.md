@@ -95,4 +95,32 @@ Siga os passos abaixo para configurar e rodar o projeto localmente:
 A aplicação estará disponível por padrão em `http://localhost:5173`. Se a porta 5173 estiver em uso, o Vite poderá usar outra porta (verifique o output no terminal).
 
 ## 📁 Estrutura do Projeto
+frontend-react-crud-main/ 
+├── public/ # Arquivos estáticos públicos 
+├── src/ # Código fonte da aplicação 
+│ ├── components/ # Componentes React reutilizáveis 
+│ │ ├── AddUserForm.jsx # Formulário para adicionar usuários
+│ │ ├── EditUserForm.jsx# Formulário para editar usuários
+│ │ └── UserList.jsx # Componente para listar usuários
+│ ├── services/ # Módulos para interagir com serviços externos (API)
+│ │ └── api.js # Configuração do Axios e chamadas à API
+│ ├── assets/ # Imagens, fontes, etc. (se houver)
+│ ├── App.jsx # Componente raiz da aplicação
+│ ├── App.css # Estilos específicos do App.jsx
+│ ├── index.css # Estilos globais
+│ └── main.jsx # Ponto de entrada da aplicação (renderiza o App)
+├── .env # Arquivo de variáveis de ambiente (local, não versionado)
+├── .eslintrc.cjs # Configuração do ESLint
+├── .gitignore # Arquivos e pastas ignorados pelo Git
+├── index.html # Template HTML principal (usado pelo Vite)
+├── package.json # Metadados do projeto, dependências e scripts
+├── README.md # Documentação do projeto (este arquivo)
+└── vite.config.js # Arquivo de configuração do Vite
+*(A estrutura exata pode variar ligeiramente)*
 
+## 🔒 Considerações de Segurança
+
+*   **Chave de Serviço (`serviceAccountKey.json`):** Trate este arquivo como confidencial. Ele concede acesso administrativo ao seu projeto Firebase. **Nunca** o envie para repositórios públicos ou o compartilhe. Certifique-se de que está listado no `.gitignore`.
+*   **Regras do Firestore:** As regras de segurança do Firestore definidas no console determinam quem pode ler ou escrever dados. Para produção, configure regras restritivas em vez de usar o modo de teste.
+*   **Validação de Entrada:** Sempre valide e sanitize os dados recebidos nas requisições para prevenir vulnerabilidades.
+*   **Hashing de Senhas:** Este projeto usa `bcrypt` para armazenar senhas de forma segura. Nunca armazene senhas em texto plano.
