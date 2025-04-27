@@ -1,116 +1,192 @@
-# Gerenciamento de Usuários (React + Vite)
+# API CRUD de Usuários com Node.js, Express e Firebase Firestore
 
-Este é um projeto de CRUD (Create, Read, Update, Delete) desenvolvido em React utilizando Vite como ferramenta de build. A aplicação permite gerenciar usuários, incluindo funcionalidades para adicionar, listar, editar e excluir usuários. Este projeto foi desenvolvido como parte de um trabalho acadêmico.
+Este projeto implementa uma API RESTful básica para realizar operações **CRUD** (Criar, Ler, Atualizar, Deletar) em uma coleção de usuários armazenada no **Firebase Firestore**. Utiliza Node.js, Express, e o Firebase Admin SDK.
 
 ## ✨ Funcionalidades
 
--   **Adicionar Usuário**: Formulário para cadastrar novos usuários com nome, e-mail e senha.
--   **Listar Usuários**: Exibe uma lista de usuários cadastrados.
--   **Editar Usuário**: Permite editar o nome e o e-mail de um usuário existente.
--   **Excluir Usuário**: Remove um usuário da lista após confirmação.
+*   Criação de novos usuários com nome, email e senha (senha é armazenada com hash **bcrypt**).
+*   Listagem de todos os usuários cadastrados.
+*   Busca de um usuário específico por ID.
+*   Atualização dos dados (nome e email) de um usuário existente.
+*   Deleção de um usuário por ID.
+*   Uso de **HATEOAS** para links de navegação na API.
+*   Validação básica de entrada e tratamento de erros.
 
-## 🚀 Tecnologias Utilizadas
+## 🛠️ Pré-requisitos
 
--   **React**: Biblioteca para construção da interface do usuário.
--   **Vite**: Ferramenta de build rápida e moderna.
--   **Axios**: Biblioteca para realizar requisições HTTP.
--   **ESLint**: Ferramenta para análise de código e padronização.
--   **CSS**: Estilização da interface.
+*   [**Node.js**](https://nodejs.org/) (versão LTS recomendada)
+*   [**npm**](https://www.npmjs.com/) (instalado com Node.js) ou [**Yarn**](https://yarnpkg.com/)
+*   [**Git**](https://git-scm.com/)
+*   Uma conta **Google** para usar o Firebase.
 
-## ✅ Pré-requisitos
+## 🚀 Configuração e Execução
 
-Antes de começar, certifique-se de ter instalado:
+Siga os passos abaixo para configurar e executar o projeto localmente:
 
--   [Node.js](https://nodejs.org/) (versão 16 ou superior)
--   [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
-
-## ⚙️ Configuração do Projeto
-
-1.  **Clone o repositório**:
+1.  **Clonar o Repositório:**
     ```bash
-    git clone <URL_DO_REPOSITORIO>
-    cd frontend-react-crud
+    git clone <URL_DO_REPOSITORIO_GIT> api-crud-firebase
+    cd api-crud-firebase
+    ```
+    *Substitua `<URL_DO_REPOSITORIO_GIT>` pela URL do repositório. O comando acima clona o projeto para uma pasta chamada `api-crud-firebase`.*
+
+2.  **Configurar o Firebase:**
+    *   Acesse o **Console do Firebase**.
+    *   Crie um novo projeto ou selecione um existente.
+    *   No menu lateral, vá para "**Build**" -> "**Firestore Database**".
+    *   Clique em "**Criar banco de dados**".
+    *   Escolha o modo de **teste** para desenvolvimento inicial. *Lembre-se que as regras de segurança no modo de teste permitem acesso aberto por um tempo limitado.* Para produção, configure regras de segurança adequadas.
+    *   Selecione a localização do servidor Firestore.
+    *   Aguarde a criação do banco de dados.
+    *   No menu lateral, clique no ícone de engrenagem ⚙️ -> "**Configurações do projeto**".
+    *   Vá para a aba "**Contas de serviço**".
+    *   Selecione "Node.js" e clique no botão "**Gerar nova chave privada**". Confirme a geração.
+    *   Um arquivo JSON será baixado (ex: `<project-id>-firebase-adminsdk-....json`).
+    *   **Renomeie** este arquivo para `serviceAccountKey.json`.
+    *   **Mova** o arquivo `serviceAccountKey.json` para a **raiz** do diretório do projeto (`api-crud-firebase`).
+    *   **Importante:** Este arquivo contém credenciais sensíveis. Ele já está incluído no `.gitignore` para prevenir o envio acidental para o Git. **Nunca** o remova do `.gitignore` ou faça commit dele.
+
+3.  **Configurar Variáveis de Ambiente:**
+    *   Na raiz do projeto (`api-crud-firebase`), crie um arquivo chamado `.env`.
+    *   Adicione o seguinte conteúdo, ajustando os valores conforme necessário:
+
+    ```dotenv
+    # .env
+
+    # Caminho para a chave de serviço do Firebase Admin SDK.
+    # O caminho relativo './serviceAccountKey.json' funciona se o arquivo
+    # estiver na raiz do projeto e você executar o servidor a partir da raiz.
+    # No Windows, pode ser necessário usar barras normais '/' ou barras invertidas duplas '\\'.
+    GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json
+
+    # Porta em que o servidor Node.js será executado.
+    PORT=3001
+
+    # URL base da API (usada para links HATEOAS).
+    # Certifique-se de que a porta aqui corresponde à variável PORT.
+    API_BASE_URL=http://localhost:3001
     ```
 
-2.  **Instale as dependências**:
+4.  **Instalar Dependências:**
+    No terminal, dentro do diretório raiz do projeto (`api-crud-firebase`), execute:
     ```bash
     npm install
-    # ou
-    # yarn install
     ```
+    *(Ou `yarn install` se preferir)*
 
-3.  **Configure a URL da API**:
-    Crie um arquivo `.env` na raiz do projeto e configure a variável `VITE_API_URL` com a URL da sua API backend. Por padrão, pode ser:
-    ```env
-    VITE_API_URL=http://localhost:3001/usuarios
-    ```
-    *Observação: Certifique-se de que o servidor da API esteja rodando.*
-
-4.  **Inicie o servidor de desenvolvimento**:
+5.  **Executar o Projeto:**
+    Ainda no diretório raiz, execute:
     ```bash
-    npm run dev
-    # ou
-    # yarn dev
+    node index.js
+    ```
+    O servidor deverá iniciar. Você verá mensagens no console como:
+    ```
+    Firebase Admin SDK inicializado com sucesso.
+    Servidor rodando na porta 3001
     ```
 
-O projeto estará disponível em `http://localhost:5173` (ou outra porta, se a 5173 estiver ocupada).
+## 📡 Endpoints da API
 
-## 📁 Estrutura do Projeto
+A API estará disponível na URL base configurada (padrão: `http://localhost:3001`).
 
-```
-src/
-├── components/         # Componentes reutilizáveis da aplicação
-│   ├── AddUserForm.jsx # Formulário para adicionar novos usuários
-│   ├── EditUserForm.jsx# Formulário para editar usuários existentes
-│   └── UserList.jsx    # Lista de usuários com opções para editar e excluir
-├── services/           # Lógica de comunicação com a API (Axios)
-│   └── api.js          # Configuração e chamadas da API
-├── App.jsx             # Componente principal (gerencia estado e lógica)
-├── index.css           # Estilos globais
-├── App.css             # Estilos específicos do App.jsx
-└── main.jsx            # Ponto de entrada da aplicação React
-.env                    # Arquivo para variáveis de ambiente (não versionado)
-.eslintrc.cjs           # Configuração do ESLint
-.gitignore              # Arquivos ignorados pelo Git
-package.json            # Dependências e scripts do projeto
-README.md               # Este arquivo
-vite.config.js          # Configuração do Vite
-```
+*   **`POST /usuarios`**: Cria um novo usuário.
+    *   **Corpo da Requisição (JSON):**
+        ```json
+        {
+          "nome": "Nome Sobrenome",
+          "email": "email@exemplo.com",
+          "senha": "senhaSegura123"
+        }
+        ```
+    *   **Resposta (Exemplo - Status 201 Created):**
+        ```json
+        {
+          "id": "userIdGeradoPeloFirestore",
+          "nome": "Nome Sobrenome",
+          "email": "email@exemplo.com",
+          "_links": {
+            "self": { "href": "http://localhost:3001/usuarios/userIdGeradoPeloFirestore" },
+            "collection": { "href": "http://localhost:3001/usuarios" }
+          }
+        }
+        ```
 
-## 🛠️ Como Utilizar
+*   **`GET /usuarios`**: Lista todos os usuários.
+    *   **Resposta (Exemplo - Status 200 OK):**
+        ```json
+        {
+          "_links": {
+            "self": { "href": "http://localhost:3001/usuarios" }
+          },
+          "_embedded": {
+            "usuarios": [
+              {
+                "id": "userId1",
+                "nome": "Usuário Um",
+                "email": "um@exemplo.com",
+                "_links": {
+                  "self": { "href": "http://localhost:3001/usuarios/userId1" }
+                }
+              },
+              {
+                "id": "userId2",
+                "nome": "Usuário Dois",
+                "email": "dois@exemplo.com",
+                "_links": {
+                  "self": { "href": "http://localhost:3001/usuarios/userId2" }
+                }
+              }
+              // ... outros usuários
+            ]
+          }
+        }
+        ```
 
-1.  **Adicionar Usuário**:
-    *   Preencha o formulário na parte superior da página com nome, e-mail e senha.
-    *   Clique no botão "Adicionar Usuário".
-2.  **Editar Usuário**:
-    *   Na lista de usuários, clique no botão "Editar" ao lado do usuário desejado.
-    *   Altere os campos no formulário de edição que aparecerá.
-    *   Clique em "Salvar Alterações".
-3.  **Excluir Usuário**:
-    *   Na lista de usuários, clique no botão "Excluir" ao lado do usuário desejado.
-    *   Confirme a exclusão na janela de confirmação.
-4.  **Listar Usuários**:
-    *   A lista de usuários é carregada automaticamente ao abrir a aplicação e atualizada após cada operação CRUD.
+*   **`GET /usuarios/:id`**: Busca um usuário pelo seu ID.
+    *   **Resposta (Exemplo - Status 200 OK):**
+        ```json
+        {
+          "id": "userIdEspecifico",
+          "nome": "Nome do Usuário",
+          "email": "usuario@exemplo.com",
+          "_links": {
+            "self": { "href": "http://localhost:3001/usuarios/userIdEspecifico" },
+            "collection": { "href": "http://localhost:3001/usuarios" }
+          }
+        }
+        ```
+    *   **Resposta (Exemplo - Status 404 Not Found):**
+        ```json
+        {
+          "message": "Usuário não encontrado"
+        }
+        ```
 
-## 📜 Scripts Disponíveis
+*   **`PUT /usuarios/:id`**: Atualiza o nome e/ou email de um usuário.
+    *   **Corpo da Requisição (JSON):** (pelo menos um campo é necessário)
+        ```json
+        {
+          "nome": "Novo Nome",
+          "email": "novoemail@exemplo.com"
+        }
+        ```
+    *   **Resposta (Exemplo - Status 200 OK):**
+        ```json
+        {
+          "id": "userIdAtualizado",
+          "nome": "Novo Nome",
+          "email": "novoemail@exemplo.com",
+          "_links": {
+            "self": { "href": "http://localhost:3001/usuarios/userIdAtualizado" },
+            "collection": { "href": "http://localhost:3001/usuarios" }
+          }
+        }
+        ```
 
-No diretório do projeto, você pode executar:
+*   **`DELETE /usuarios/:id`**: Deleta um usuário pelo seu ID.
+    *   **Resposta (Exemplo - Status 204 No Content):** (Sem corpo na resposta)
 
--   `npm run dev`: Inicia o servidor de desenvolvimento com hot-reload.
--   `npm run build`: Gera a versão de produção otimizada do projeto na pasta `dist/`.
--   `npm run preview`: Inicia um servidor local para visualizar a versão de produção gerada.
--   `npm run lint`: Executa o ESLint para verificar e corrigir problemas de estilo e potenciais erros no código.
+Use ferramentas como **Postman**, **Insomnia**, ou `curl` para interagir com a API.
 
-## 📝 Observações
+## 📁 Estrutura do Projeto (Simplificada)
 
--   Certifique-se de que a API configurada no `.env` esteja em execução para que a aplicação funcione corretamente.
--   O projeto utiliza ESLint para garantir a qualidade e a padronização do código. É recomendado executar `npm run lint` antes de commitar alterações.
-
-## 👨‍💻 Autor
-
-Este projeto foi desenvolvido por **Luiz Henrique Schmidt Gonçalves de Assis**.
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Luiz%20Assis-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/luiz-henrique-de-assis/) <!-- Opcional: Adicione seu link do LinkedIn -->
-[![GitHub](https://img.shields.io/badge/GitHub-luizhsgassis-181717?style=flat&logo=github)](https://github.com/luizhsgassis) <!-- Opcional: Adicione seu link do GitHub -->
-
-Para dúvidas ou sugestões, entre em contato pelo e-mail: `luizhsgassis.dev@gmail.com`.
